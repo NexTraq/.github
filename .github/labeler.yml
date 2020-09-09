@@ -1,0 +1,29 @@
+dependencies:
+  - Carthage/*
+  - Cartfile.private
+  - Cartfile
+  - Pods/*
+  - Podfile
+  - Podfile.lock
+  - Romefile
+  - .gitmodules
+  - Brewfile
+
+documentation:
+  - README.md
+  - doc/*
+  - docs/*
+
+enhancement:
+  - Sources/*
+  - Tests/*
+
+CI/CD:
+  - fastlane/*
+  - travis.yml
+  - Dangerfile
+  - Gemfile
+  - .circleci/*
+  - .ruby-version
+  - .swift-version
+  - Makefile
