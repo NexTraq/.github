@@ -1,6 +1,6 @@
 version: 2
 mergeable:
-- when: pull_request.*, pull_request_review.*
+- when: pull_request.*
   validate:
   - do: description
     no_empty:
@@ -9,8 +9,6 @@ mergeable:
     - must_include:
         regex: \[[a-zA-Z]{2,6}-\d{1,7}\]
         regex_flag: none
-        message: >
-          Please include ticket link in square brackets (ex: [AAA-123])
     - must_include:
         regex: \[[a-zA-Z]{2,6}-\d{1,7}\]:\shttps:\/\/nextraq.+
         regex_flag: none
@@ -22,8 +20,12 @@ mergeable:
     must_include:
       regex: \[[a-zA-Z]{2,6}-\d{1,7}\]
       regex_flag: none
-      message: >
-        Please include ticket in title in square brackets (ex: [AAA-123])
+
+  fail:
+  - do: comment
+    payload:
+      body: >
+        Please include the ticket in title/description in square brackets (ex: [AAA-123]).
 
 - when: pull_request.*, issues.*
   validate:
@@ -40,13 +42,3 @@ mergeable:
   fail:
   - do: labels
     labels: [WIP]
-
-- when: schedule.repository
-  validate:
-  - do: stale
-    days: 20
-    type: pull_request, issues
-  pass:
-  - do: comment
-    payload:
-      body: There hasn't been any activity for a while.  Is it still relevant?
