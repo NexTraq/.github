@@ -1,6 +1,14 @@
 version: 2
 mergeable:
-- when: pull_request.opened, pull_request.edited, pull_request.ready_for_review, pull_request.reopened
+- when: pull_request.*, pull_request_review.*, status.*, check_suite.*
+  name: "Automatically merge pull requests once it passes all checks"
+    validate: []
+    pass:
+      - do: merge
+        merge_method: "squash"
+        
+- when: pull_request.*, pull_request_review.*
+  name: 'PR title and description checks'     
   validate:
   - do: description
     no_empty:
@@ -13,7 +21,7 @@ mergeable:
         regex: \[[a-zA-Z]{2,6}-\d{1,7}\]:\shttps:\/\/nextraq.+
         regex_flag: none
         message: >
-          Jira bot expected to automagically link the ticket.
+          Couldn't find a Jira ticket number to automagically link your ticket.  Please add one.
   - do: title
     no_empty:
       enabled: true
@@ -28,6 +36,7 @@ mergeable:
         Please include the ticket in title/description in square brackets (ex: [AAA-123]).
 
 - when: pull_request.*, issues.*
+  name: "Label Validation check"
   validate:
   - do: title
     must_exclude:
