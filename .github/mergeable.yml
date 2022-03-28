@@ -34,11 +34,10 @@ mergeable:
       regex: ^\[WIP\]
   - do: label
     must_exclude:
-      regex: WIP
+      regex: 'WIP'
   pass:
   - do: labels
-    labels: [WIP]
-    mode: delete
+    delete: 'WIP'
   fail:
   - do: labels
-    labels: [WIP]
+    add: 'WIP'
