@@ -16,23 +16,18 @@ mergeable:
                   regex_flag: none
                   message: |
                     Jira bot expected to automagically link the ticket.
-          - do: and
-            validate:
-              - do: or
-                validate:
-                  - do: title
-                    must_include:
-                      regex: feat|chore|fix
-                      message: Custom message...
-                  - do: title
-                    must_include:
-                      regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]'
-                      regex_flag: none
-                      message: >
-                        "Please include the jira ticket in the title (using the
-                        format [AAA-123])."
-              - no_empty:
-                  enabled: true
+          
+          - do: title
+            or:
+              - must_include:
+                  regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]'
+                  regex_flag: none
+                  message: >
+                    "Please include the jira ticket in the title (using the
+                    format [AAA-123])."
+              - must_include:
+                  regex: feat|chore|fix|ci|doc|perf
+                  message: 'Titles should follow semantic release conventions.'
                   
   - when: 'pull_request.*, issues.*'
     validate:
