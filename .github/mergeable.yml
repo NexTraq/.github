@@ -1,43 +1,51 @@
 version: 2
 mergeable:
-- when: pull_request.*
-  validate:
-  - do: description
-    no_empty:
-      enabled: true
-    and:
-    - must_include:
-        regex: \[[a-zA-Z]{2,6}-\d{1,7}\]
-        regex_flag: none
-    - must_include:
-        regex: \[[a-zA-Z]{2,6}-\d{1,7}\]:\shttps:\/\/nextraq.+
-        regex_flag: none
-        message: >
-          Jira bot expected to automagically link the ticket.
-  - do: title
-    no_empty:
-      enabled: true
-    must_include:
-      regex: \[[a-zA-Z]{2,6}-\d{1,7}\]
-      regex_flag: none
+  - when: pull_request.*
+    validate:
+      - do: and
+        validate:
+        
+          - do: description
+            and:
+              - or:
+                - must_include:
+                    regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]'
+                    regex_flag: none
+                - must_include:
+                    regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]:\shttps:\/\/nextraq.+'
+                    regex_flag: none
+                    message: |
+                      Jira bot expected to automagically link the ticket.
+                - must_exclude:
+                    regex: '### Issue Link :link:'
+                    regex_flag: 'none'
 
-  fail:
-  - do: comment
-    payload:
-      body: >
-        Please include the ticket in title/description in square brackets (ex: [AAA-123]).
-
-- when: pull_request.*, issues.*
-  validate:
-  - do: title
-    must_exclude:
-      regex: ^\[WIP\]
-  - do: label
-    must_exclude:
-      regex: 'WIP'
-  pass:
-  - do: labels
-    delete: 'WIP'
-  fail:
-  - do: labels
-    add: 'WIP'
+              - no_empty:
+                  enabled: true
+          
+          - do: title
+            or:
+              - must_include:
+                  regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]'
+                  regex_flag: none
+                  message: >
+                    "Please include the jira ticket in the title (using the
+                    format [AAA-123])."
+              - must_include:
+                  regex: feat|chore|fix|ci|doc|perf
+                  message: 'Titles should follow semantic release conventions.'
+                  
+  - when: 'pull_request.*, issues.*'
+    validate:
+      - do: title
+        must_exclude:
+          regex: '^\[WIP\]'
+      - do: label
+        must_exclude:
+          regex: WIP
+    pass:
+      - do: labels
+        delete: WIP
+    fail:
+      - do: labels
+        add: WIP
