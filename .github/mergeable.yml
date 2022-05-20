@@ -5,23 +5,23 @@ mergeable:
       - do: and
         validate:
         
-        - do: description
-          and:
-            - or:
-              - must_include:
-                  regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]'
-                  regex_flag: none
-              - must_include:
-                  regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]:\shttps:\/\/nextraq.+'
-                  regex_flag: none
-                  message: |
-                    Jira bot expected to automagically link the ticket.
-              - must_exclude:
-                  regex: '### Issue Link :link:'
-                  regex_flag: 'none'
-            
-            - no_empty:
-                enabled: true
+          - do: description
+            and:
+              - or:
+                - must_include:
+                    regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]'
+                    regex_flag: none
+                - must_include:
+                    regex: '\[[a-zA-Z]{2,6}-\d{1,7}\]:\shttps:\/\/nextraq.+'
+                    regex_flag: none
+                    message: |
+                      Jira bot expected to automagically link the ticket.
+                - must_exclude:
+                    regex: '### Issue Link :link:'
+                    regex_flag: 'none'
+
+              - no_empty:
+                  enabled: true
           
           - do: title
             or:
