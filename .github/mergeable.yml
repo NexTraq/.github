@@ -32,7 +32,7 @@ mergeable:
                     "Please include the jira ticket in the title (using the
                     format [AAA-123])."
               - must_include:
-                  regex: feat|chore|fix|ci|doc|perf
+                  regex: feat|chore|fix|ci|doc|perf|deps
                   message: 'Titles should follow semantic release conventions.'
                   
   - when: 'pull_request.*, issues.*'
