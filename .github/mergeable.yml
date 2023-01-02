@@ -35,14 +35,17 @@ mergeable:
                   regex: feat|chore|fix|ci|doc|perf
                   message: 'Titles should follow semantic release conventions.'
                   
-  - when: 'pull_request.*, issues.*'
+  - when: 'pull_request.*, pull_request_review.*'
+    name: 'PR title check'
     validate:
-      - do: title
-        must_exclude:
-          regex: '^\[WIP\]'
-      - do: label
-        must_exclude:
-          regex: WIP
+      - do: and
+        validate:
+          - do: title
+            must_exclude:
+              regex: '^\[WIP\]'
+          - do: label
+            must_exclude:
+              regex: 'WIP'
     pass:
       - do: labels
         delete: WIP
